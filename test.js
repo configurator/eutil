@@ -55,7 +55,7 @@ describe('async', function () {
             function stop_on_error_2(callback, arg) {
                 log();
                 called = true;
-                throw 'This function should not be called.';
+                throw new Error('This function should not be called.');
             },
             function stop_on_error_callback(err, result) {
                 log();
@@ -93,11 +93,11 @@ describe('async', function () {
             {
                 a: function objects_a(callback) {
                     log();
-                    callback(null, 'one');
+                    return callback(null, 'one');
                 },
                 b: function objects_b(callback) {
                     log();
-                    callback(null, 2);
+                    return callback(null, 2);
                 }
             },
             function objects_callback(err, results) {
@@ -116,11 +116,11 @@ describe('async', function () {
             [
                 function arrays_a(callback) {
                     log();
-                    callback(null, 'one');
+                    return callback(null, 'one');
                 },
                 function arrays_b(callback) {
                     log();
-                    callback(null, 2);
+                    return callback(null, 2);
                 }
             ],
             function arrays_callback(err, results) {
@@ -137,16 +137,16 @@ describe('async', function () {
     it('should support passing arguments to objects', function (done) {
         async(
             function (callback) {
-                callback(null, 1);
+                return callback(null, 1);
             },
             [
                 function objects_args_a(callback, arg) {
                     log();
-                    callback(null, 'one ' + arg);
+                    return callback(null, 'one ' + arg);
                 },
                 function objects_args_b(callback, arg) {
                     log();
-                    callback(null, 1 + arg);
+                    return callback(null, 1 + arg);
                 }
             ],
             function objects_args_callback(err, results) {
@@ -162,16 +162,16 @@ describe('async', function () {
     it('should support passing arguments to arrays', function (done) {
         async(
             function (callback) {
-                callback(null, 1);
+                return callback(null, 1);
             },
             [
                 function arrays_args_a(callback, arg) {
                     log();
-                    callback(null, 'one ' + arg);
+                    return callback(null, 'one ' + arg);
                 },
                 function arrays_args_b(callback, arg) {
                     log();
-                    callback(null, 1 + arg);
+                    return callback(null, 1 + arg);
                 }
             ],
             function arrays_args_callback(err, results) {
@@ -190,20 +190,38 @@ describe('async', function () {
             {
                 a: function objects_errors_a(callback) {
                     log();
-                    callback(null, 'one');
+                    return callback(null, 'one');
                 },
                 b: function objects_errors_b(callback) {
                     log();
-                    callback('err');
+                    return callback('error one');
                 },
                 c: function objects_errors_c(callback) {
                     log();
-                    callback(null, 3);
+                    return callback(null, 3);
+                },
+                d: function objects_errors_b(callback) {
+                    log();
+                    return callback('error two');
+                },
+                e: function objects_errors_c(callback) {
+                    log();
+                    return callback(null, 'five');
                 }
             },
             function objects_callback(err, results) {
                 log();
-                err.should.eql({ b: 'err' });
+                err.should.eql({
+                    b: 'error one',
+                    d: 'error two'
+                });
+                results.should.eql({
+                    a: 'one',
+                    b: undefined,
+                    c: 3,
+                    d: undefined,
+                    e: 'five'
+                });
 
                 done();
             }
@@ -215,20 +233,111 @@ describe('async', function () {
             [
                 function objects_errors_a(callback) {
                     log();
-                    callback(null, 'one');
+                    return callback(null, 'one');
                 },
                 function objects_errors_b(callback) {
                     log();
-                    callback('err');
+                    return callback('error one');
                 },
                 function objects_errors_c(callback) {
                     log();
-                    callback(null, 3);
+                    return callback(null, 3);
+                },
+                function objects_errors_d(callback) {
+                    log();
+                    return callback('error two');
+                },
+                function objects_errors_e(callback) {
+                    log();
+                    return callback(null, 'five');
                 }
             ],
             function arrays_callback(err, results) {
                 log();
-                err.should.eql([, 'err', ]);
+                err.should.eql([
+                    ,
+                    'error one',
+                    ,
+                    'error two',
+                ]);
+                results.should.eql([
+                    'one',
+                    undefined,
+                    3,
+                    undefined,
+                    'five'
+                ]);
+
+                done();
+            }
+        );
+    });
+
+    it('should work correctly when having multiple calls with objects and arrays', function (done) {
+        var called = false;
+        async(
+            {
+                a: function complex_a(callback) {
+                    log();
+
+                    return callback(null, 'one');
+                },
+                b: function complex_b(callback) {
+                    log();
+
+                    return callback(null, 'two');
+                }
+            },
+            [
+                function complex_1(callback, arg) {
+                    log();
+                    arg.should.eql({ a: 'one', b: 'two' });
+
+                    return callback(null, 'three');
+                },
+                function complex_2(callback, arg) {
+                    log();
+                    arg.should.eql({ a: 'one', b: 'two' });
+
+                    return callback(null, 'four');
+                }
+            ],
+            function complex_outside(callback, arg) {
+                log();
+                arg.should.eql(['three', 'four']);
+
+                return callback(null, 'five');
+            },
+            {
+                c: function complex_c(callback, arg) {
+                    log();
+                    arg.should.eql('five');
+
+                    return callback('error one');
+                },
+                d: function complex_d(callback, arg) {
+                    log();
+                    arg.should.eql('five');
+
+                    return callback('error two');
+                }
+            },
+            [
+                function complex_not_called_1() {
+                    log();
+                    called = true;
+                    throw new Error('This function should not be called.');
+                },
+                function complex_not_called_2() {
+                    log();
+                    called = true;
+                    throw new Error('This function should not be called.');
+                }
+            ],
+            function complex_callback(err, result) {
+                log();
+                err.should.eql({ c: 'error one', d: 'error two' });
+                called.should.be.false;
 
                 done();
             }
