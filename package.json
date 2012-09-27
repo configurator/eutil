@@ -1,0 +1,12 @@
+{
+    "name": "eutil",
+    "description": "General utilities for JavaScript",
+    "version": "0.9.0",
+    "author": "Dor Kleiman <configurator@gmail.com>",
+    "repository": { "type": "git", "url": "git://github.com/configurator/eutil.git" },
+    "homepage": "https://github.com/configurator/eutil",
+    "devDependencies": {
+        "mocha": "*",
+        "should": "*"
+    }
+}
