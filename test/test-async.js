@@ -2,8 +2,9 @@
 
 var should = require('should'),
 
-    async = require('./async'),
-    log = require('./log');
+    eutil = require('..')
+    async = eutil.async,
+    log = eutil.log;
 
 describe('async', function () {
     it('should return the final result to the last callback when all items finish correctly', function (done) {
