@@ -10,11 +10,11 @@ describe('async', function () {
         async(
             function results_1(callback) {
                 log();
-                return callback(null, 1);
+                setTimeout(function () { callback(null, 1); }, 1);
             },
             function results_2(callback, arg) {
                 log();
-                return callback(null, arg + 1);
+                setTimeout(function () { callback(null, arg + 1); }, 1);
             },
             function results_callback(err, result) {
                 log();
@@ -30,11 +30,11 @@ describe('async', function () {
         async(
             function errors_1(callback) {
                 log();
-                return callback(null, 1);
+                setTimeout(function () { callback(null, 1); }, 1);
             },
             function errors_2(callback, arg) {
                 log();
-                return callback('error', arg + 1);
+                setTimeout(function () { callback('error', arg + 1); }, 1);
             },
             function errors_callback(err, result) {
                 log();
@@ -50,7 +50,7 @@ describe('async', function () {
         async(
             function stop_on_error_1(callback) {
                 log();
-                return callback('error', 1);
+                setTimeout(function () { callback('error', 1); }, 1);
             },
             function stop_on_error_2(callback, arg) {
                 log();
@@ -75,7 +75,7 @@ describe('async', function () {
             },
             function multiple_results_2(callback, arg1, arg2) {
                 log();
-                return callback(null, arg1 + 'cd', arg2 + 2000);
+                setTimeout(function () { callback(null, arg1 + 'cd', arg2 + 2000); }, 1);
             },
             function multiple_results_callback(err, result1, result2) {
                 log();
@@ -93,11 +93,11 @@ describe('async', function () {
             {
                 a: function objects_a(callback) {
                     log();
-                    return callback(null, 'one');
+                    setTimeout(function () { callback(null, 'one'); }, 1);
                 },
                 b: function objects_b(callback) {
                     log();
-                    return callback(null, 2);
+                    setTimeout(function () { callback(null, 2); }, 1);
                 }
             },
             function objects_callback(err, results) {
@@ -116,11 +116,11 @@ describe('async', function () {
             [
                 function arrays_a(callback) {
                     log();
-                    return callback(null, 'one');
+                    setTimeout(function () { callback(null, 'one'); }, 1);
                 },
                 function arrays_b(callback) {
                     log();
-                    return callback(null, 2);
+                    setTimeout(function () { callback(null, 2); }, 1);
                 }
             ],
             function arrays_callback(err, results) {
@@ -137,16 +137,16 @@ describe('async', function () {
     it('should support passing arguments to objects', function (done) {
         async(
             function (callback) {
-                return callback(null, 1);
+                setTimeout(function () { callback(null, 1); }, 1);
             },
             [
                 function objects_args_a(callback, arg) {
                     log();
-                    return callback(null, 'one ' + arg);
+                    setTimeout(function () { callback(null, 'one ' + arg); }, 1);
                 },
                 function objects_args_b(callback, arg) {
                     log();
-                    return callback(null, 1 + arg);
+                    setTimeout(function () { callback(null, 1 + arg); }, 1);
                 }
             ],
             function objects_args_callback(err, results) {
@@ -162,16 +162,16 @@ describe('async', function () {
     it('should support passing arguments to arrays', function (done) {
         async(
             function (callback) {
-                return callback(null, 1);
+                setTimeout(function () { callback(null, 1); }, 1);
             },
             [
                 function arrays_args_a(callback, arg) {
                     log();
-                    return callback(null, 'one ' + arg);
+                    setTimeout(function () { callback(null, 'one ' + arg); }, 1);
                 },
                 function arrays_args_b(callback, arg) {
                     log();
-                    return callback(null, 1 + arg);
+                    setTimeout(function () { callback(null, 1 + arg); }, 1);
                 }
             ],
             function arrays_args_callback(err, results) {
@@ -190,23 +190,23 @@ describe('async', function () {
             {
                 a: function objects_errors_a(callback) {
                     log();
-                    return callback(null, 'one');
+                    setTimeout(function () { callback(null, 'one'); }, 1);
                 },
                 b: function objects_errors_b(callback) {
                     log();
-                    return callback('error one');
+                    setTimeout(function () { callback('error one'); }, 1);
                 },
                 c: function objects_errors_c(callback) {
                     log();
-                    return callback(null, 3);
+                    setTimeout(function () { callback(null, 3); }, 1);
                 },
                 d: function objects_errors_b(callback) {
                     log();
-                    return callback('error two');
+                    setTimeout(function () { callback('error two'); }, 1);
                 },
                 e: function objects_errors_c(callback) {
                     log();
-                    return callback(null, 'five');
+                    setTimeout(function () { callback(null, 'five'); }, 1);
                 }
             },
             function objects_callback(err, results) {
@@ -233,23 +233,23 @@ describe('async', function () {
             [
                 function objects_errors_a(callback) {
                     log();
-                    return callback(null, 'one');
+                    setTimeout(function () { callback(null, 'one'); }, 1);
                 },
                 function objects_errors_b(callback) {
                     log();
-                    return callback('error one');
+                    setTimeout(function () { callback('error one'); }, 1);
                 },
                 function objects_errors_c(callback) {
                     log();
-                    return callback(null, 3);
+                    setTimeout(function () { callback(null, 3); }, 1);
                 },
                 function objects_errors_d(callback) {
                     log();
-                    return callback('error two');
+                    setTimeout(function () { callback('error two'); }, 1);
                 },
                 function objects_errors_e(callback) {
                     log();
-                    return callback(null, 'five');
+                    setTimeout(function () { callback(null, 'five'); }, 1);
                 }
             ],
             function arrays_callback(err, results) {
@@ -280,12 +280,12 @@ describe('async', function () {
                 a: function complex_a(callback) {
                     log();
 
-                    return callback(null, 'one');
+                    setTimeout(function () { callback(null, 'one'); }, 1);
                 },
                 b: function complex_b(callback) {
                     log();
 
-                    return callback(null, 'two');
+                    setTimeout(function () { callback(null, 'two'); }, 1);
                 }
             },
             [
@@ -293,33 +293,33 @@ describe('async', function () {
                     log();
                     arg.should.eql({ a: 'one', b: 'two' });
 
-                    return callback(null, 'three');
+                    setTimeout(function () { callback(null, 'three'); }, 1);
                 },
                 function complex_2(callback, arg) {
                     log();
                     arg.should.eql({ a: 'one', b: 'two' });
 
-                    return callback(null, 'four');
+                    setTimeout(function () { callback(null, 'four'); }, 1);
                 }
             ],
             function complex_outside(callback, arg) {
                 log();
                 arg.should.eql(['three', 'four']);
 
-                return callback(null, 'five');
+                setTimeout(function () { callback(null, 'five'); }, 1);
             },
             {
                 c: function complex_c(callback, arg) {
                     log();
                     arg.should.eql('five');
 
-                    return callback('error one');
+                    setTimeout(function () { callback('error one'); }, 1);
                 },
                 d: function complex_d(callback, arg) {
                     log();
                     arg.should.eql('five');
 
-                    return callback('error two');
+                    setTimeout(function () { callback('error two'); }, 1);
                 }
             },
             [
